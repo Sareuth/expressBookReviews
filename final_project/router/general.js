@@ -1,6 +1,7 @@
 const express = require('express');
 let books = require("./booksdb.js");
 const {users, doesExist, isValid} = require("./auth_users.js");
+const { default: axios } = require('axios');
 const public_users = express.Router();
 
 
@@ -76,5 +77,29 @@ public_users.get('/review/:isbn', function (req, res) {
     } else
         return res.status(404).json({ message: "Book not found" });
 });
+
+
+async function getAllBooksWithAxios() {
+    const response = await axios.get("http://localhost:5000/");
+    return response.data;
+}
+
+async function getBookByISBNWithAxios(isbn) {
+    const response = await axios.get(`http://localhost:5000/isbn/${isbn}`);
+    return response.data;
+}
+
+async function getBooksByAuthorWithAxios(author) {
+    const response = await axios.get(`http://localhost:5000/author/${encodeURIComponent(author)}`);
+    return response.data;
+}
+
+async function getBooksByTitleWithAxios(title) {
+    const response = await axios.get(`http://localhost:5000/title/${encodeURIComponent(title)}`);
+    return response.data;
+}
+
+
+
 
 module.exports.general = public_users;
